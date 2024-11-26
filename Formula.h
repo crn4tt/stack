@@ -95,6 +95,7 @@ private:
                 lexem.push_back(_expression[i]);
             }
         }
+        _analysis.push_back(lexem);
     }
 
     std::vector<std::string> BuildPostfix(){
@@ -188,41 +189,74 @@ private:
     }
 
     bool CheckBrackets(){
-        int* RightIndex = new int[15];
-        memset(RightIndex, -1, 15);
-        int RIndex = 0;
-        int* LeftIndex = new int[15];
-        int LSize = 0;
-        int LIndex = 0;
-        memset(LeftIndex, -1, 15);
+        int status = 0;
+        int LeftBrackets = 0;
+        int RightBracket = 0;
         for (int i = 0; i < _analysis.size(); i++){
             if (_analysis[i] == "("){
-                RightIndex[RIndex] = i;
-                LIndex = RIndex;
-                RIndex++;
-
+                status++;
+                LeftBrackets++;
             }
             else if (_analysis[i] == ")"){
-                LeftIndex[LIndex] = i;
-                LSize++;
-                LIndex--;
+                status--;
+                if (status < 0){
+                    status = -1000;
+                }
+                RightBracket++;
             }
         }
-        if (LSize != RIndex){
-            std::cout<<"ошибка в количестве строк"<<"\n";
-            return false;
+        if (status == 0){
+            return true;
         }
-        for (int i = 0; i < RIndex; i++){
-            if (RightIndex[i] > LeftIndex[i] || LeftIndex[i] == -1){
-                std::cout<<"ошибка в скобках, в символе"<<i+1<<"\n";
-                return false;
+        int size = LeftBrackets + RightBracket;
+        int matrix[size][2];
+        for (int i = 0; i < size; i++){
+            for (int j = 0; j < 2; j++){
+                matrix[i][j] = -1;
             }
-
         }
-        return true;
+        int row = 0;
+        for (int i = 0; i < _analysis.size(); i++){
+            if (_analysis[i] == "("){
+                matrix[row][0] = i + 1;
+                row++;
+            }
+            else if (_analysis[i] == ")"){
+                int CopyRow = row - 1;
+                while (CopyRow != -1){
+                    if (matrix[CopyRow][1] == -1){
+                        matrix[CopyRow][1] = i + 1;
+                        break;
+                    }
+                    CopyRow--;
+                }
+                if (CopyRow == -1){
+                    matrix[row][1] = i + 1;
+                    row++;
+                }
+            }
+        }
+        std::cout<<"\ntable Brackers\n";
+        row = 0;
+        while ((matrix[row][0] != -1 || matrix[row][1] != -1) && row != size){
+            std::cout<<"  "<<matrix[row][0]<<"     "<<matrix[row][1]<<"\n";
+            row++;
+        }
+        return false;
     }
 
     bool CheckFormula(){
+        bool status = 0;
+        for (int i = 0; i < _analysis.size(); i++){
+            if (_analysis[i] == "+" || _analysis[i] == "-" || _analysis[i] == "*" || _analysis[i] == "/" || _analysis[i] == "(" || _analysis[i] == ")"){
+                if (status == 0) status = 1;
+                else{
+                    std::cerr<<"incorrect input\n";
+                    break;
+                }
+            }
+            else status = 0;
+        }
         return true;
     }
     
