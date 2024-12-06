@@ -1,8 +1,14 @@
 [
 {
   "directory": "C:/Users/User/Project/FORMULA/build",
-  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  -std=c++20 -g -o CMakeFiles\\main.dir\\main.cpp.obj -c C:\\Users\\User\\Project\\FORMULA\\main.cpp",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  -std=c++17 -g -o CMakeFiles\\main.dir\\main.cpp.obj -c C:\\Users\\User\\Project\\FORMULA\\main.cpp",
   "file": "C:\\Users\\User\\Project\\FORMULA\\main.cpp",
   "output": "CMakeFiles\\main.dir\\main.cpp.obj"
+},
+{
+  "directory": "C:/Users/User/Project/FORMULA/build",
+  "command": "C:\\msys64\\ucrt64\\bin\\g++.exe  -std=c++17 -g -o CMakeFiles\\main.dir\\CorrectChecker.cpp.obj -c C:\\Users\\User\\Project\\FORMULA\\CorrectChecker.cpp",
+  "file": "C:\\Users\\User\\Project\\FORMULA\\CorrectChecker.cpp",
+  "output": "CMakeFiles\\main.dir\\CorrectChecker.cpp.obj"
 }
 ]

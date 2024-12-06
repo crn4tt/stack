@@ -1,15 +1,14 @@
+#pragma once
 #include <iostream>
 #include <cstring>
 template <typename T>
 
 
-class Stack
-
-{
+class Stack{
 private:
     T* _array;
     size_t _size;
-    size_t _top;//индекс верхнего элемента(след после заполненного)
+    size_t _top;//индекс верхнего элемента
     bool _isEmpty=true;
     void Expand(){
         _size=_size*2;
@@ -29,7 +28,7 @@ public:
         return _isEmpty;
     }
     bool IsFull()const{
-        return _size-1==_top&&_size!=_isEmpty;
+        return _size-1==_top && !_isEmpty;
     }
     
     void Push(T elem){
@@ -41,7 +40,9 @@ public:
             _top++;
         _array[_top]=elem;
     }
-
+    size_t GetLength(){
+        return _size;
+    }
     T Pop(){
         if(IsEmpty())
             throw "stack is empty";
@@ -54,6 +55,10 @@ public:
 
     T Check()const{
         return _array[_top];
+    }
+
+    ~Stack(){
+        delete[] _array;
     }
     friend std::ostream& operator<<(std::ostream& os, const Stack& s){
         if(s.IsEmpty())

@@ -1,0 +1,57 @@
+#include "CorrectChecker.h"
+#include "Table.h"
+#include <optional>
+
+
+bool CorrectChecker::CheckBrackets (const std::string& s){
+    Table<int, int> t1("(", ")");
+    for (size_t i = 0; i < s.size(); i++){
+        if(s[i]=='(')
+            _brackets.Push(i);
+        if(s[i]==')'){
+            try{
+            t1.AppendRow(_brackets.Pop(), i);
+
+            }
+            catch(const char* error_message){
+                t1.AppendRow(std::nullopt, i);
+                std::cout<<"error in brackets "<<i<<std::endl;
+                std::cout<<t1<<std::endl;
+                return false;
+            }
+        }  
+    }
+    while(!_brackets.IsEmpty()){
+        t1.AppendRow(_brackets.Pop(), std::nullopt);
+    }
+    std::cout<<t1<<std::endl;
+    return _brackets.IsEmpty();
+}
+
+bool CorrectChecker::CheckFormula(const std::vector<std::string>& _analysis){
+    bool status = 0;
+    for (int i = 0; i < _analysis.size(); i++){
+        if (_analysis[i] == "+" || _analysis[i] == "-" || _analysis[i] == "*" || _analysis[i] == "/" || _analysis[i] == "("){
+            if (status == 0) status = 1;
+            else{
+                std::cerr<<"incorrect input\n";
+                return false;
+            }
+        }
+        else status = 0;
+    }
+    return true;
+}
+
+bool CorrectChecker::CheckVariable(const std::vector<std::string>& _analysis){
+    double number;
+        for (int i = 0; i < _analysis.size(); i++){
+            if ((_analysis[i][0] >= 65 && _analysis[i][0] >= 90) || (_analysis[i][0] >= 97 && _analysis[i][0] >= 122)){
+                std::cout<<"Enter "<<_analysis[i]<<": ";
+                std::cin>>number;
+                std::optional<std::string> elem1(_analysis[i]);
+                _varTable.AppendRow(elem1, number);
+            }
+        }
+        return 1;
+    }

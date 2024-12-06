@@ -1,9 +1,15 @@
+#include <iostream>
 #include "Formula.h"
 
+// std::optional<std::string> create(bool b){
+//     if (b)
+//         return "Godzilla";
+//     return std::nullopt;
+//     }
+
 int main(){
-    Formula f("(3 + 3)**");
-    std::string postfix = f.GetPostfix();
-    std::cout<<postfix<<"\n";
-    std::cout<<f.GetResult()<<"\n";
+    std::string s="(a+b)+c+b-d";
+    Formula f(s);
+    std::cout<<f.Calculate();
     return 0;
 }
