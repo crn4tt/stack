@@ -27,6 +27,11 @@ public:
         _col2=new std::optional<T2>[_table_size];
         _count =0;
     }
+
+    size_t GetCount(){
+        return _count;
+    }
+
     void AppendRow(std::optional<T1> elem1, std::optional<T2> elem2){
         _col1[_count]=elem1;
         _col2[_count]=elem2;
@@ -34,13 +39,23 @@ public:
 
     }//прописать переполнение
 
-    T2 operator[](const T1& elem){
+    std::optional<T2> operator[](const T1& elem){
         std::optional<T1> _elem(elem);
         for (int i = 0; i < _count; i++){
             if (_elem == _col1[i]){
-                return _col2[i].value();
+                return _col2[i];
             }
         }
+        return std::nullopt;
+    }
+
+    bool FindCol1(const T1& elem){
+        for (int i = 0; i < _count; i++){
+            if (_col1[i] == elem){
+                return 1;
+            }
+        }
+        return 0;
     }
 
     friend std::ostream& operator<<(std::ostream& os, const Table& t){

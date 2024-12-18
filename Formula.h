@@ -5,6 +5,7 @@
 #include <vector>
 #include <optional>
 #include "CorrectChecker.h"
+#include <math.h>
 
 
 class Formula{
@@ -29,18 +30,16 @@ public:
         _prior.AppendRow(elem, 2);
         elem = std::optional<std::string>("/");
         _prior.AppendRow(elem, 2);
-        if (!_checker.CheckBrackets(_expression)){
-            throw 1;
-        }
+        FindSin();
         Analysis();
-        if (!_checker.CheckFormula(_analysis) || !_checker.CheckVariable(_analysis)){
+        if (!_checker.CheckBrackets(_expression) || !_checker.CheckFormula(_analysis) || !_checker.CheckVariable(_analysis)){
             throw 1;
         }
-        _analysis = BuildPostfix();
-        for (int i = 0; i < _analysis.size(); i++){
-            _postfix += _analysis[i];
-        }
-        
+        _analysis = BuildPostfix();       
+    }
+
+    std::string GetPostfix(){
+        return _postfix;
     }
 
     std::vector<std::string> BuildPostfix(){
@@ -78,6 +77,7 @@ public:
         }
         return postfix;
     }
+
     double Calculate(){
         double number;
         double number1;
@@ -102,7 +102,12 @@ public:
                 stack.Push(stack.Pop() / number); 
                 continue;
             }
-            stack.Push(_varTable[_analysis[i]]);
+            if (_varTable[_analysis[i]] == std::nullopt){
+                stack.Push(std::stod(_analysis[i]));
+            }
+            else{
+                stack.Push(_varTable[_analysis[i]].value());
+            }
         }
         return stack.Pop();
     }
@@ -129,31 +134,17 @@ public:
                 }
             }
             else if (_expression[i] == ')' || _expression[i] == '('){
-                if (i != _expression.length() - 1 && _expression[i] != ')'){
-                    if (_expression[i + 1] == '-'){
-                        lexem.push_back(_expression[i + 1]);
-                        i++;
-                        status = true;
-                        continue;
-                    }
-                }
-                else if (_expression[i] == ')' && status == true){
-                    status = false;
+                if (!lexem.empty()){
                     _analysis.push_back(lexem);
                     lexem.clear();
+                }
+                lexem = _expression[i];
+                _analysis.push_back(lexem);
+                lexem.clear();
+                if (_expression[i] == '(' && _expression[i + 1] == '-'){
+                    lexem.push_back(_expression[i + 1]);
+                    i++;
                     continue;
-                }        
-                if (lexem.empty()){
-                    lexem = _expression[i];
-                    _analysis.push_back(lexem);
-                    lexem.clear();
-                }
-                else {
-                    _analysis.push_back(lexem);
-                    lexem.clear();
-                    lexem = _expression[i];
-                    _analysis.push_back(lexem);
-                    lexem.clear();
                 }
             }
             else if (_expression[i] == ' '){
@@ -163,9 +154,28 @@ public:
                 lexem.push_back(_expression[i]);
             }
         }
-        _analysis.push_back(lexem);
+        if (!lexem.empty()){
+           _analysis.push_back(lexem); 
+        }
     }
 
-
+    void FindSin(){
+        int k = 0;
+        int index = 0;
+        std::string sub_string;
+        while (_expression.find("sin", k) != std::string::npos){
+            index = _expression.find("sin");
+            k = _expression.find("sin") + 4;
+            while (_expression[k] != ')'){
+                sub_string += _expression[k];
+                k++;
+            }
+            Formula G(sub_string);
+            double res = sin(G.Calculate());
+            sub_string = std::to_string(res);
+            _expression.replace(index, k - index + 1, sub_string);
+            sub_string.clear();
+        }
+    }
 
 };
