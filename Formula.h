@@ -30,7 +30,6 @@ public:
         _prior.AppendRow(elem, 2);
         elem = std::optional<std::string>("/");
         _prior.AppendRow(elem, 2);
-        FindSin();
         Analysis();
         if (!_checker.CheckBrackets(_expression) || !_checker.CheckFormula(_analysis) || !_checker.CheckVariable(_analysis)){
             throw 1;
@@ -158,24 +157,4 @@ public:
            _analysis.push_back(lexem); 
         }
     }
-
-    void FindSin(){
-        int k = 0;
-        int index = 0;
-        std::string sub_string;
-        while (_expression.find("sin", k) != std::string::npos){
-            index = _expression.find("sin");
-            k = _expression.find("sin") + 4;
-            while (_expression[k] != ')'){
-                sub_string += _expression[k];
-                k++;
-            }
-            Formula G(sub_string);
-            double res = sin(G.Calculate());
-            sub_string = std::to_string(res);
-            _expression.replace(index, k - index + 1, sub_string);
-            sub_string.clear();
-        }
-    }
-
 };
