@@ -2,10 +2,9 @@
 #include "Formula.h"
 
 int main(){
-    std::string s="(-11+bb*c/d-123)*(sin(1+3)+bb*sin(x+x))";
+    std::string s="(a + b * (c + 4))";
     Formula f(s);
     std::cout<<f.GetPostfix()<<"\n";
     std::cout<<f.Calculate();
-    //ответ верный
     return 0;
 }

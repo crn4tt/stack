@@ -17,7 +17,6 @@ public:
     }
     bool CheckBrackets(const std::string& s);
     bool CheckVariable(const std::vector<std::string>& _analysis);
-    // void FillVariable();
     bool CheckFormula(const std::vector<std::string>& _analysis);
     bool GetState(){
         return _state;

@@ -1,3 +1,0 @@
-C:/Users/User/Project/FORMULA/build/CMakeFiles/main.dir
-C:/Users/User/Project/FORMULA/build/CMakeFiles/edit_cache.dir
-C:/Users/User/Project/FORMULA/build/CMakeFiles/rebuild_cache.dir
