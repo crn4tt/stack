@@ -19,17 +19,17 @@ private:
 public:
     Formula(const std::string& exp) : _prior("sym", "prior", 10), _expression(exp){
         std::optional<std::string> elem = std::optional<std::string>("(");
-        _prior.AppendRow(elem, 0);
+        _prior.AddRow(elem, 0);
         elem = std::optional<std::string>(")");
-        _prior.AppendRow(elem, 0);
+        _prior.AddRow(elem, 0);
         elem = std::optional<std::string>("+");
-        _prior.AppendRow(elem, 1);
+        _prior.AddRow(elem, 1);
         elem = std::optional<std::string>("-");
-        _prior.AppendRow(elem, 1);
+        _prior.AddRow(elem, 1);
         elem = std::optional<std::string>("*");
-        _prior.AppendRow(elem, 2);
+        _prior.AddRow(elem, 2);
         elem = std::optional<std::string>("/");
-        _prior.AppendRow(elem, 2);
+        _prior.AddRow(elem, 2);
         Analysis();
         if (!_checker.CheckBrackets(_expression) || !_checker.CheckFormula(_analysis) || !_checker.CheckVariable(_analysis)){
             throw 1;
