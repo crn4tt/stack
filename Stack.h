@@ -1,74 +1,73 @@
 #pragma once
 #include <iostream>
-#include <cstring>
-template <typename T>
 
 
-class Stack{
+template<typename T>
+class Stack {
 private:
-    T* _array;
+    T* _pMem;
     size_t _size;
-    size_t _top;
-    bool _isEmpty = true;
+    int _top; 
+    bool _isEmpty = true; 
     void Expand() {
-        _size=_size * 2;
-        T* temp_arr = new T[_size];
-        std::memcpy(temp_arr, _array, _size * sizeof(T));
-        delete[] _array;
-        _array = temp_arr;
+        _size *= 2;
+        T* arr = new T[_size];
+        for (size_t i = 0; i < _size / 2; i++) arr[i] = _pMem[i];
+        delete [] _pMem;
+        _pMem = arr;
+
+    }
+    void Reduce() {
+        if (_size <= 100) return; 
+        _size /= 2;
+        T* arr = new T[_size]; 
+        for (size_t i = 0; i < _top + 1; i++) arr[i] = _pMem[i];
+        delete [] _pMem;
+        _pMem = arr;
     }
 
-public:                                                                             
-    Stack(size_t size = 10){
-        _array = new T[size];
+public:
+    Stack(size_t size) {
+        _pMem = new T[size];
         _size = size;
-        _top = 0;
+        _top = -1;
     }
-    bool IsEmpty() const {
-        return _isEmpty;
+    ~Stack() {
+        delete [] _pMem; 
     }
-    bool IsFull() const {
-        return _size - 1 == _top && !_isEmpty;
+    void Push(const T& elem) {
+        if (_isEmpty) _isEmpty = false;
+        if(isFull()) Expand();
+        _pMem[++_top] = elem;         
+    }
+
+    T Pop() {
+        if(_isEmpty) throw "Stack is empty";
+        if ((_top + 1) < _size / 4) Reduce();
+        if(_top == 0) _isEmpty = true;
+        return _pMem[_top--];
+    }
+    T Top() const {
+        if (_isEmpty) throw "Stack is empty";
+        return _pMem[_top];
+    }
+    int GetIndexTop() { return _top; }
+
+    bool isFull() const {
+        return (_top + 1 == _size);
     }
     
-    void Push(T elem){
-        if(IsFull())
-            Expand();
-        if (IsEmpty())
-            _isEmpty = false;
-        else
-            _top++;
-        _array[_top] = elem;
-    }
-    size_t GetLength(){
-        return _size;
-    }
-    T Pop(){
-        if(IsEmpty())
-            throw "stack is empty";
-        if(_top == 0){
-            _isEmpty = true;
-            return _array[_top];
+    bool isEmpty() const { return _top == -1; }
+
+    friend std :: ostream & operator<<(std :: ostream& os, const Stack& stack) {
+        os << "( ";
+        for (size_t i = 0; i < stack._top + 1; i++){
+            if (i != stack._top) os << stack._pMem[i] << ", "; 
+            else os << stack._pMem[i] << " )";
         }
-        return _array[_top--];
-    }
-
-    T Check()const{
-        return _array[_top];
-    }
-
-    ~Stack(){
-        delete[] _array;
-    }
-    friend std::ostream& operator<<(std::ostream& os, const Stack& s){
-        if(s.IsEmpty())
-            os << "stack is empty";
-        else
-            for(size_t i = 0; i <= s._top; i++)
-                os << s._array[i] << " ";
-            
-        
+        os << std :: endl;
         return os;
     }
 
+    size_t GetSize() const { return _size; }
 };

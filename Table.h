@@ -75,7 +75,6 @@ public:
             if (table._col2[i] == std::nullopt) os << std :: setw(flag) << "?";
             else os << std::setw(flag) << table._col2[i].value();
             os << "|\n";
-            // os << "|" << std :: setw(flag) << table._col1[i].value() << "|" << std :: setw(flag) << table._col2[i].value() << "|" << "\n";
         }
         os << "+";
         for (size_t i = 0; i < flag * 2; i++){ if(i == flag)os <<"+"; os << "-";}
